@@ -79,7 +79,7 @@ def oversample_with_normalizing_flow(X_minority, n_samples):
 ```
 ## Evaluation Procedure
 The evaluation procedure for each oversampling technique follows these steps:<br>
-1.Perform stratified 5-fold cross-validation on the training data:
+1. Perform stratified 5-fold cross-validation on the training data:
 - For each fold:
   - Apply the oversampling technique to the training fold
   - Train a Random Forest classifier on the oversampled data
@@ -88,3 +88,73 @@ The evaluation procedure for each oversampling technique follows these steps:<br
 2. Train a final model on the entire oversampled training set
 3. Generate predictions for the test set
 4. Save the test predictions to a CSV file
+```python
+def evaluate_model(X, y, model, technique_name):
+    skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+    accuracies, recalls, precisions, f1_scores = [], [], [], []
+    
+    for train_index, val_index in skf.split(X, y):
+        X_train_fold, X_val_fold = X.iloc[train_index], X.iloc[val_index]
+        y_train_fold, y_val_fold = y.iloc[train_index], y.iloc[val_index]
+        
+        # oversampling
+        if technique_name == 'SMOTE':
+            X_train_resampled, y_train_resampled = smote.fit_resample(X_train_fold, y_train_fold)
+        elif technique_name == 'ADASYN':
+            X_train_resampled, y_train_resampled = adasyn.fit_resample(X_train_fold, y_train_fold)
+        elif technique_name == 'Normalizing Flows':
+            minority_class = X_train_fold[y_train_fold == 1]
+            majority_class = X_train_fold[y_train_fold == 0]
+            n_minority, n_majority = len(minority_class), len(majority_class)
+            oversampled_minority = oversample_with_normalizing_flow(minority_class, n_majority - n_minority)
+            X_train_resampled = pd.concat([X_train_fold, pd.DataFrame(oversampled_minority, columns=X_train_fold.columns)])
+            y_train_resampled = pd.concat([y_train_fold, pd.Series([1] * (n_majority - n_minority))])
+        
+        model.fit(X_train_resampled, y_train_resampled)
+        y_pred = model.predict(X_val_fold)
+        
+        accuracies.append(accuracy_score(y_val_fold, y_pred))
+        recalls.append(recall_score(y_val_fold, y_pred))
+        precisions.append(precision_score(y_val_fold, y_pred))
+        f1_scores.append(f1_score(y_val_fold, y_pred))
+    
+    # cross-validation results
+    print(f"Results for {technique_name}:")
+    print(f"Mean Accuracy: {np.mean(accuracies):.4f} (+/- {np.std(accuracies):.4f})")
+    print(f"Mean Recall: {np.mean(recalls):.4f} (+/- {np.std(recalls):.4f})")
+    print(f"Mean Precision: {np.mean(precisions):.4f} (+/- {np.std(precisions):.4f})")
+    print(f"Mean F1-score: {np.mean(f1_scores):.4f} (+/- {np.std(f1_scores):.4f})")
+    
+    # generate predictions for test set
+    X_train_resampled, y_train_resampled = apply_oversampling(X, y, technique_name)
+    model.fit(X_train_resampled, y_train_resampled)
+    y_pred_test = model.predict(X_test)
+    y_pred_proba_test = model.predict_proba(X_test)[:, 1]
+    
+    
+    test_predictions = pd.DataFrame({
+        'id': test_data['id'],
+        'target': y_pred_test,
+        'target_proba': y_pred_proba_test
+    })
+    test_predictions.to_csv(f'{technique_name}_predictions.csv', index=False)
+    
+    print(f"Test predictions saved to {technique_name}_predictions.csv")
+
+# Evaluate
+rf_classifier = RandomForestClassifier(random_state=42)
+
+evaluate_model(X_train, y_train, rf_classifier, 'SMOTE')
+evaluate_model(X_train, y_train, rf_classifier, 'ADASYN')
+evaluate_model(X_train, y_train, rf_classifier, 'Normalizing Flows')
+```
+## Comparison of Techniques
+### SMOTE
+SMOTE is a well-established technique that creates synthetic samples by interpolating between existing minority class samples. It's relatively simple to implement and understand, and often provides good results.
+### ADASYN
+ADASYN is an extension of SMOTE that focuses on generating more synthetic samples for minority class instances that are harder to learn. This can be beneficial when the minority class has complex decision boundaries.
+### Normalizing Flows
+Normalizing Flows is a more advanced technique that learns a complex transformation of the data distribution. It has the potential to capture more nuanced patterns in the data, but it's also more computationally intensive and may require more tuning to achieve optimal results.
+## Conclusion
+By comparing these three oversampling techniques, we can gain insights into their relative performance on the Porto Seguro Safe Driver Prediction dataset. The cross-validation results provide a robust estimate of each technique's effectiveness, while the test set predictions allow for submission to the Kaggle competition for external validation.
+When interpreting the results, consider not only the performance metrics but also the computational complexity and ease of implementation of each technique. The choice of the best oversampling method may depend on the specific characteristics of the dataset and the requirements of the project.
