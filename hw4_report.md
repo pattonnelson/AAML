@@ -26,10 +26,10 @@ The results of each oversampling technique are presented below, including the co
 
 ### 1. SMOTE
 **Mean Metrics**:
-- **Accuracy**: _X.XXXX_ ± _Y.YYYY_
-- **Recall**: _X.XXXX_ ± _Y.YYYY_
-- **Precision**: _X.XXXX_ ± _Y.YYYY_
-- **F1-score**: _X.XXXX_ ± _Y.YYYY_
+- **Accuracy**: _0.9623_ (± _0.0005_)
+- **Recall**: _0.0018_ (± _0.0027_)
+- **Precision**: _0.0371_ (± _0.0581_)
+- **F1-score**: _0.0035_ (± _0.0051_)
 
 **Confusion Matrices**:
 ![Confusion Matrix for SMOTE Fold 1](path_to_image_1)
@@ -38,10 +38,10 @@ The results of each oversampling technique are presented below, including the co
 
 ### 2. ADASYN
 **Mean Metrics**:
-- **Accuracy**: _X.XXXX_ ± _Y.YYYY_
-- **Recall**: _X.XXXX_ ± _Y.YYYY_
-- **Precision**: _X.XXXX_ ± _Y.YYYY_
-- **F1-score**: _X.XXXX_ ± _Y.YYYY_
+- **Accuracy**: _0.9622_ (± _0.0002_)
+- **Recall**: _0.0032_ (± _0.0028_)
+- **Precision**: _0.0696_ (± _0.0603_)
+- **F1-score**: _0.0062_ (± _0.0053_)
 
 **Confusion Matrices**:
 ![Confusion Matrix for ADASYN Fold 1](path_to_image_3)
@@ -50,10 +50,10 @@ The results of each oversampling technique are presented below, including the co
 
 ### 3. Normalizing Flows
 **Mean Metrics**:
-- **Accuracy**: _X.XXXX_ ± _Y.YYYY_
-- **Recall**: _X.XXXX_ ± _Y.YYYY_
-- **Precision**: _X.XXXX_ ± _Y.YYYY_
-- **F1-score**: _X.XXXX_ ± _Y.YYYY_
+- **Accuracy**: _0.9636_ (± _0.0000_)
+- **Recall**: _0.0000_ (± _0.0000_)
+- **Precision**: _1.0000_ (± _0.0000_)
+- **F1-score**: _0.0000_ (± _0.0000_)
 
 **Confusion Matrices**:
 ![Confusion Matrix for Normalizing Flows Fold 1](path_to_image_5)
