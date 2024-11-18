@@ -477,9 +477,11 @@ for i in range(num_datasets):
     X_tensor = torch.tensor(x, dtype=dtype, device=device)
     y_tensor = torch.tensor(y, dtype=dtype, device=device)...
 ```
-## Conclusion
+## Initial Conclusion
 Average MSE for SCAD model: 2.1466109223818406<br><br>
 Average MSE for ElasticNet model: 10.251284280684455<br><br>
 Average MSE for Square Root Lasso model: 10.29377798661154<br><br>
 SCAD model approximates the ideal solution more closely.<br><br>
 Based on the results, the SCAD model is more effective in this context, likely due to its non-convex penalty, which offers a better balance between sparsity and the preservation of significant coefficients compared to ElasticNet and Square Root Lasso. Future work may involve exploring the models under different data settings, such as varying feature correlations or noise levels.
+
+## Application on Concrete Data
