@@ -182,8 +182,11 @@ evaluate_model(X_train, y_train, rf_classifier, 'Normalizing Flows')
 - **F1-score**: _0.0035_ (± _0.0051_)
 
 **Confusion Matrices**:
-![Confusion Matrix for SMOTE Fold 1](path_to_image_1)
-![Confusion Matrix for SMOTE Fold 2](path_to_image_2)
+![Confusion Matrix for SMOTE Fold 1](https://github.com/pattonnelson/AAML/blob/main/ConfusionMatrix1SMOTE.png)
+![Confusion Matrix for SMOTE Fold 2](https://github.com/pattonnelson/AAML/blob/main/ConfusionMatrix2SMOTE.png)
+![Confusion Matrix for SMOTE Fold 3](https://github.com/pattonnelson/AAML/blob/main/ConfusionMatrix3SMOTE.png)
+![Confusion Matrix for SMOTE Fold 4](https://github.com/pattonnelson/AAML/blob/main/ConfusionMatrix4SMOTE.png)
+![Confusion Matrix for SMOTE Fold 5](https://github.com/pattonnelson/AAML/blob/main/ConfusionMatrix5SMOTE.png)
 ...
 
 ### 2. ADASYN
@@ -194,8 +197,12 @@ evaluate_model(X_train, y_train, rf_classifier, 'Normalizing Flows')
 - **F1-score**: _0.0062_ (± _0.0053_)
 
 **Confusion Matrices**:
-![Confusion Matrix for ADASYN Fold 1](path_to_image_3)
-![Confusion Matrix for ADASYN Fold 2](path_to_image_4)
+![Confusion Matrix for ADASYN Fold 1](https://github.com/pattonnelson/AAML/blob/main/ConfusionMatrix1ADASYN.png)
+![Confusion Matrix for ADASYN Fold 2](https://github.com/pattonnelson/AAML/blob/main/ConfusionMatrix2ADASYN.png)
+![Confusion Matrix for ADASYN Fold 3](https://github.com/pattonnelson/AAML/blob/main/ConfusionMatrix3ADASYN.png)
+![Confusion Matrix for ADASYN Fold 4](https://github.com/pattonnelson/AAML/blob/main/ConfusionMatrix4ADASYN.png)
+![Confusion Matrix for ADASYN Fold 5](https://github.com/pattonnelson/AAML/blob/main/ConfusionMatrix5ADASYN.png)
+
 ...
 
 ### 3. Normalizing Flows
@@ -206,16 +213,19 @@ evaluate_model(X_train, y_train, rf_classifier, 'Normalizing Flows')
 - **F1-score**: _0.0000_ (± _0.0000_)
 
 **Confusion Matrices**:
-![Confusion Matrix for Normalizing Flows Fold 1](path_to_image_5)
-![Confusion Matrix for Normalizing Flows Fold 2](path_to_image_6)
+![Confusion Matrix for Normalizing Flows Fold 1](https://github.com/pattonnelson/AAML/blob/main/ConfusionMatrix1Normalizing%20Flows.png)
+![Confusion Matrix for Normalizing Flows Fold 2](https://github.com/pattonnelson/AAML/blob/main/ConfusionMatrix2Normalizing%20Flows.png)
+![Confusion Matrix for Normalizing Flows Fold 3](https://github.com/pattonnelson/AAML/blob/main/ConfusionMatrix3Normalizing%20Flows.png)
+![Confusion Matrix for Normalizing Flows Fold 4](https://github.com/pattonnelson/AAML/blob/main/ConfusionMatrix4Normalizing%20Flows.png)
+![Confusion Matrix for Normalizing Flows Fold 5](https://github.com/pattonnelson/AAML/blob/main/ConfusionMatrix5Normalizing%20Flows.png)
+
 ...
 
 ## Test Set Predictions
 - The models were trained on the full training data with oversampling and used to generate predictions for the test set. The predictions were saved in the following CSV files:
-  - [SMOTE Predictions](./mnt/data/SMOTE_predictions.csv)
-  - [ADASYN Predictions](./mnt/data/ADASYN_predictions.csv)
-  - [Normalizing Flows Predictions](./mnt/data/Normalizing%20Flows_predictions.csv)
-
+  - [SMOTE Predictions](https://github.com/pattonnelson/AAML/blob/main/SMOTE_predictions.csv)
+  - [ADASYN Predictions](https://github.com/pattonnelson/AAML/blob/main/ADASYN_predictions.csv)
+  - [Normalizing Flows Predictions](https://github.com/pattonnelson/AAML/blob/main/Normalizing%20Flows_predictions.csv)
 ## Conclusion
 - **Performance Comparison**: The performance of each technique varied based on the metric considered. Recall and F1-score were particularly crucial for evaluating the model's ability to correctly identify the minority class.
 - **Insights**: Normalizing Flows provided a unique approach to oversampling, potentially capturing more complex distributions of the minority class. However, SMOTE and ADASYN were more straightforward to implement and interpret.
