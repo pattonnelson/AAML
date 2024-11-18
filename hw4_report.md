@@ -181,7 +181,7 @@ evaluate_model(X_train, y_train, rf_classifier, 'Normalizing Flows')
 - **Precision**: _0.0371_ (± _0.0581_)
 - **F1-score**: _0.0035_ (± _0.0051_)
 
-**Confusion Matrices**:
+**Confusion Matrices**:<br>
 ![Confusion Matrix for SMOTE Fold 1](https://github.com/pattonnelson/AAML/blob/main/ConfusionMatrix1SMOTE.png)
 ![Confusion Matrix for SMOTE Fold 2](https://github.com/pattonnelson/AAML/blob/main/ConfusionMatrix2SMOTE.png)
 ![Confusion Matrix for SMOTE Fold 3](https://github.com/pattonnelson/AAML/blob/main/ConfusionMatrix3SMOTE.png)
@@ -196,7 +196,7 @@ evaluate_model(X_train, y_train, rf_classifier, 'Normalizing Flows')
 - **Precision**: _0.0696_ (± _0.0603_)
 - **F1-score**: _0.0062_ (± _0.0053_)
 
-**Confusion Matrices**:
+**Confusion Matrices**:<br>
 ![Confusion Matrix for ADASYN Fold 1](https://github.com/pattonnelson/AAML/blob/main/ConfusionMatrix1ADASYN.png)
 ![Confusion Matrix for ADASYN Fold 2](https://github.com/pattonnelson/AAML/blob/main/ConfusionMatrix2ADASYN.png)
 ![Confusion Matrix for ADASYN Fold 3](https://github.com/pattonnelson/AAML/blob/main/ConfusionMatrix3ADASYN.png)
@@ -212,7 +212,7 @@ evaluate_model(X_train, y_train, rf_classifier, 'Normalizing Flows')
 - **Precision**: _1.0000_ (± _0.0000_)
 - **F1-score**: _0.0000_ (± _0.0000_)
 
-**Confusion Matrices**:
+**Confusion Matrices**:<br>
 ![Confusion Matrix for Normalizing Flows Fold 1](https://github.com/pattonnelson/AAML/blob/main/ConfusionMatrix1Normalizing%20Flows.png)
 ![Confusion Matrix for Normalizing Flows Fold 2](https://github.com/pattonnelson/AAML/blob/main/ConfusionMatrix2Normalizing%20Flows.png)
 ![Confusion Matrix for Normalizing Flows Fold 3](https://github.com/pattonnelson/AAML/blob/main/ConfusionMatrix3Normalizing%20Flows.png)
