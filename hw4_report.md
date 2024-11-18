@@ -228,6 +228,13 @@ evaluate_model(X_train, y_train, rf_classifier, 'Normalizing Flows')
   - [Normalizing Flows Predictions](https://github.com/pattonnelson/AAML/blob/main/Normalizing%20Flows_predictions.csv)
 ## Conclusion
 - **Performance Comparison**: The performance of each technique varied based on the metric considered. Recall and F1-score were particularly crucial for evaluating the model's ability to correctly identify the minority class.
+- SMOTE: Effectively improved recall but may have led to increased false positives, impacting precision.
+- ADASYN: Provided a better balance between precision and recall, especially in regions with fewer minority class samples.
+- Normalizing Flows: Although complex, this method showed potential in generating more realistic minority class samples, resulting in a balanced performance.
+### Limitations
+The project was limited by the complexity and computational cost of training on a large dataset.<br>
+<br>
+Normalizing Flows are challenging to implement and may require more fine-tuning for optimal performance.
 - **Insights**: Normalizing Flows provided a unique approach to oversampling, potentially capturing more complex distributions of the minority class. However, SMOTE and ADASYN were more straightforward to implement and interpret.
 
 ## Future Work
