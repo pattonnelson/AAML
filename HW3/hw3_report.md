@@ -79,12 +79,10 @@ MSE
 ## Data Generation
 To test these models, 200 datasets were generated with the following properties:
 
-Number of Samples: 100
-Number of Features: 20
-Correlation Structure: Features were correlated using a Toeplitz matrix with a correlation coefficient (
-𝜌
-ρ) of 0.8.
-True Coefficients: A predefined coefficient vector, 
+- Number of Samples: 100
+- Number of Features: 20
+- Correlation Structure: Features were correlated using a Toeplitz matrix with a correlation coefficient (𝜌) of 0.8.
+- True Coefficients: A predefined coefficient vector, 
 𝛽
 =
 [
