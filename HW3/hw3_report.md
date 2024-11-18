@@ -450,12 +450,32 @@ class SqrtLasso(nn.Module):
             Tensor: Coefficients with shape (output_size, input_size).
 
         """
-        return self.linear.weight    ...
+        return self.linear.weight  
 ```
 Data Generation and Model Comparison
 ```python
-# Generate datasets and compare models
-...
+# Parameters
+num_datasets = 200      # Number of datasets
+num_samples = 100       # Number of samples per dataset
+num_features = 20       # Number of features per dataset
+rho = 0.8               # Correlation coefficient for features
+beta = np.array([-1, 2, 3, 0, 0, 0, 0, 2, -1, 4]).reshape(-1, 1)
+betastar = np.concatenate([beta, np.repeat(0, num_features - len(beta)).reshape(-1, 1)], axis=0)
+
+
+# Initialize lists to store errors for each model
+scad_errors = []
+elasticnet_errors = []
+sqrt_lasso_errors = []
+
+for i in range(num_datasets):
+    # Generate features and target for the dataset
+    x = make_correlated_features(num_samples, num_features, rho)
+    y = x @ betastar + 1.5 * np.random.normal(size=(num_samples, 1))
+
+    # Convert data to PyTorch tensors
+    X_tensor = torch.tensor(x, dtype=dtype, device=device)
+    y_tensor = torch.tensor(y, dtype=dtype, device=device)...
 ```
 Conclusion
 Based on the results, the SCAD model is more effective in this context, likely due to its non-convex penalty, which offers a better balance between sparsity and the preservation of significant coefficients compared to ElasticNet and Square Root Lasso. Future work may involve exploring the models under different data settings, such as varying feature correlations or noise levels.
