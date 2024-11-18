@@ -45,7 +45,6 @@ X_test = test_data.drop('id', axis=1)
 smote = SMOTE(random_state=42)
 adasyn = ADASYN(random_state=42)
 
-# Define Normalizing Flow
 class NormalizingFlow(nn.Module):
     def __init__(self, dim):
         super().__init__()
@@ -93,7 +92,6 @@ from sklearn.metrics import confusion_matrix, accuracy_score, recall_score, prec
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Function to evaluate model
 def evaluate_model(X, y, model, technique_name):
     skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
     accuracies, recalls, precisions, f1_scores = [], [], [], []
@@ -117,28 +115,23 @@ def evaluate_model(X, y, model, technique_name):
             X_train_resampled = pd.concat([X_train_fold, pd.DataFrame(oversampled_minority, columns=X_train_fold.columns)])
             y_train_resampled = pd.concat([y_train_fold, pd.Series([1] * (n_majority - n_minority))])
 
-        # Train the model and make predictions
         model.fit(X_train_resampled, y_train_resampled)
         y_pred = model.predict(X_val_fold)
 
-        # Calculate metrics
         accuracies.append(accuracy_score(y_val_fold, y_pred))
         recalls.append(recall_score(y_val_fold, y_pred))
         precisions.append(precision_score(y_val_fold, y_pred, zero_division=1))
         f1_scores.append(f1_score(y_val_fold, y_pred))
 
-        # Compute and store the confusion matrix
         cm = confusion_matrix(y_val_fold, y_pred)
         confusion_matrices.append(cm)
 
-    # Print overall metrics
     print(f"Results for {technique_name}:")
     print(f"Mean Accuracy: {np.mean(accuracies):.4f} (+/- {np.std(accuracies):.4f})")
     print(f"Mean Recall: {np.mean(recalls):.4f} (+/- {np.std(recalls):.4f})")
     print(f"Mean Precision: {np.mean(precisions):.4f} (+/- {np.std(precisions):.4f})")
     print(f"Mean F1-score: {np.mean(f1_scores):.4f} (+/- {np.std(f1_scores):.4f})")
 
-    # Plot confusion matrices
     for i, cm in enumerate(confusion_matrices):
         plt.figure(figsize=(6, 4))
         sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
@@ -148,7 +141,6 @@ def evaluate_model(X, y, model, technique_name):
         plt.savefig(f'ConfusionMatrix{i+1}{technique_name}.png')
         plt.show()
 
-    # Final training on the whole set and predictions for the test set
     if technique_name == 'SMOTE':
         X_train_resampled, y_train_resampled = smote.fit_resample(X, y)
     elif technique_name == 'ADASYN':
@@ -166,7 +158,6 @@ def evaluate_model(X, y, model, technique_name):
     y_pred_test = model.predict(X_test)
     y_pred_proba_test = model.predict_proba(X_test)[:, 1]
 
-    # Save predictions to CSV
     test_predictions = pd.DataFrame({
         'id': test_data['id'],
         'target': y_pred_test,
@@ -176,7 +167,6 @@ def evaluate_model(X, y, model, technique_name):
 
     print(f"Test predictions saved to {technique_name}_predictions.csv")
 
-# Evaluate models
 rf_classifier = RandomForestClassifier(random_state=42)
 
 evaluate_model(X_train, y_train, rf_classifier, 'SMOTE')
