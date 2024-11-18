@@ -11,6 +11,7 @@ ElasticNet is a linear regression model that combines both L1 and L2 penalties:
 
 Objective Function:
 1
+/
 2
 MSE
 +
@@ -32,6 +33,7 @@ l1_ratio
 )
 ×
 1
+/
 2
 ∣
 ∣
@@ -107,8 +109,7 @@ To test these models, 200 datasets were generated with the following properties:
 1
 ,
 4
-]
-β=[−1,2,3,0,0,0,0,2,−1,4], was used to generate the true target values.
+] was used to generate the true target values.
 ### Data Generation Function
 ```python
 def make_correlated_features(num_samples, p, rho):
