@@ -1,4 +1,5 @@
 # Regression Analysis with SCAD, ElasticNet, and Square Root Lasso Models
+### Patton Nelson, DATA 440
 ## Introduction
 This report presents the implementation and comparison of three regularized regression models using PyTorch: the Smoothly Clipped Absolute Deviation (SCAD), ElasticNet, and Square Root Lasso. These models are used to perform regression on datasets with correlated features to evaluate which method best approximates the ideal regression solution.
 
