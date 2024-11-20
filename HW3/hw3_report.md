@@ -77,7 +77,58 @@ MSE
  +α∣∣w∣∣ 
 1
 ​
- 
+## SCAD Application
+```python
+import pandas as pd
+import torch
+import numpy as np
+from sklearn.metrics import mean_squared_error
+from SCAD import SCADRegression
+
+# Initialize data
+data = pd.read_csv("weight_change_dataset.csv")
+data = data.drop(columns=["Gender", "Participant ID", "Sleep Quality","Physical Activity Level"])
+
+X = data.drop(columns='Final Weight (lbs)')
+y = data['Final Weight (lbs)'].values
+
+# Ensure X is a NumPy array with numeric types
+X = X.to_numpy(dtype=float)
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+dtype = torch.float64
+
+num_features = X.shape[1]  # Use .shape[1] to get the number of columns
+
+# Convert data to PyTorch tensors
+X_tensor = torch.tensor(X, dtype=dtype, device=device)
+y_tensor = torch.tensor(y, dtype=dtype, device=device).unsqueeze(1)
+```
+Here I intialized the problem, import the SCAD model from my SCAD folder in which I created the original class. This code is included below in the next question. I used a weight change dataset from Kaggle, marking the Final Weight as the target, and the other variables as feature data. I then make sure the feature data is numeric by assigning it to a numpy array. From here I convert this data into PyTorch tensors for use in my SCAD model. Implementation shown below.
+```python
+# SCAD model
+scad = SCADRegression(input_size=num_features, lambda_=0.1, a=2.9)
+scad.fit(X_tensor, y_tensor)
+scad_predictions = scad.predict(X_tensor).detach().cpu().numpy()
+scad_mse = mean_squared_error(y, scad_predictions)
+
+print(f"MSE for SCAD model: {scad_mse}")
+
+coefficients = scad.get_coefficients().detach().cpu().numpy().flatten()
+threshold = 1e-1
+selected_variables = np.where(np.abs(coefficients) > threshold)[0]
+
+print(f"Indices of selected variables: {selected_variables}")
+print(f"Number of selected variables: {len(selected_variables)}")
+
+print(f"Coefficients: {coefficients}")
+```
+The output is as follows: <br>
+*MSE for SCAD model: 91.92570978254959*<br>
+*Indices of selected variables: [1 2 3 4 5]*<br>
+*Number of selected variables: 5*<br>
+*Coefficients: [ 0.09098145  0.1298075  -0.15484032  0.21589716 -0.22203118  1.00492335
+ -0.07300389 -0.09710434]*
 ## Data Generation
 To test these models, 200 datasets were generated with the following properties:
 
