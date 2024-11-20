@@ -536,3 +536,115 @@ SCAD model approximates the ideal solution more closely.<br><br>
 Based on the results, the SCAD model is more effective in this context, likely due to its non-convex penalty, which offers a better balance between sparsity and the preservation of significant coefficients compared to ElasticNet and Square Root Lasso. Future work may involve exploring the models under different data settings, such as varying feature correlations or noise levels.
 
 ## Application on Concrete Data
+```python
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import KFold
+from sklearn.metrics import mean_squared_error
+from sklearn.preprocessing import PolynomialFeatures, StandardScaler
+from SCAD import SCADRegression, ElasticNet, SqrtLasso
+import torch
+
+data = pd.read_csv("concrete.csv")
+X = data.drop(columns="strength")
+y = data["strength"].values
+
+# Generate polynomial features (degree 2) and standardize them
+poly = PolynomialFeatures(degree=2, include_bias=False)
+X_poly = poly.fit_transform(X)
+
+scaler = StandardScaler()
+X_poly = scaler.fit_transform(X_poly)
+
+# PyTorch environment
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+dtype = torch.float64
+
+# PyTorch tensors
+X_tensor = torch.tensor(X_poly, dtype=dtype, device=device)
+y_tensor = torch.tensor(y, dtype=dtype, device=device).unsqueeze(1)
+```
+This is the initial set up to implement the models on the concrete data. It looks similar to setting up the previous two questions.
+
+```python
+# Initialize parameters for models
+num_features = X_tensor.shape[1]
+scad_lambda = 0.35
+elasticnet_alpha = 1.0
+elasticnet_l1_ratio = 0.5
+sqrt_lasso_alpha = 0.5
+
+# Cross-validation setup
+kf = KFold(n_splits=5, shuffle=True, random_state=42)
+scad_mse_list = []
+elasticnet_mse_list = []
+sqrt_lasso_mse_list = []
+
+scad_selected_vars = []
+elasticnet_selected_vars = []
+sqrt_lasso_selected_vars = []
+
+threshold = 1e-5  # Threshold for variable selection
+```
+Here I set up parameters for use when running the models and performing cross validation in the next step.
+
+```python
+for train_idx, test_idx in kf.split(X_tensor):
+    X_train, X_test = X_tensor[train_idx], X_tensor[test_idx]
+    y_train, y_test = y_tensor[train_idx], y_tensor[test_idx]
+
+    # SCAD
+    scad_model = SCADRegression(input_size=num_features, lambda_=scad_lambda, a=3.7)
+    scad_model.fit(X_train, y_train)
+    scad_pred = scad_model.predict(X_test).detach().cpu().numpy()
+    scad_mse_list.append(mean_squared_error(y_test.cpu().numpy(), scad_pred))
+
+    scad_coefficients = scad_model.get_coefficients().detach().cpu().numpy().flatten()
+    scad_selected_vars.append(np.sum(np.abs(scad_coefficients) > threshold))
+
+    # ElasticNet
+    elasticnet_model = ElasticNet(input_size=num_features, alpha=elasticnet_alpha, l1_ratio=elasticnet_l1_ratio)
+    elasticnet_model.fit(X_train, y_train)
+    elasticnet_pred = elasticnet_model.predict(X_test).detach().cpu().numpy()
+    elasticnet_mse_list.append(mean_squared_error(y_test.cpu().numpy(), elasticnet_pred))
+
+    elasticnet_coefficients = elasticnet_model.get_coefficients().detach().cpu().numpy().flatten()
+    elasticnet_selected_vars.append(np.sum(np.abs(elasticnet_coefficients) > threshold))
+
+    # SqrtLasso
+    sqrt_lasso_model = SqrtLasso(input_size=num_features, alpha=sqrt_lasso_alpha)
+    sqrt_lasso_model.fit(X_train, y_train)
+    sqrt_lasso_pred = sqrt_lasso_model.predict(X_test).detach().cpu().numpy()
+    sqrt_lasso_mse_list.append(mean_squared_error(y_test.cpu().numpy(), sqrt_lasso_pred))
+
+    sqrt_lasso_coefficients = sqrt_lasso_model.get_coefficients().detach().cpu().numpy().flatten()
+    sqrt_lasso_selected_vars.append(np.sum(np.abs(sqrt_lasso_coefficients) > threshold))
+```
+This is where the models are implemented on train/test split data. The code collects the Mean Squared Error for every model and also captures the variables that will be kept or "non-zero". I calculate and print the output in the following step.
+```python
+avg_scad_mse = np.mean(scad_mse_list)
+avg_elasticnet_mse = np.mean(elasticnet_mse_list)
+avg_sqrt_lasso_mse = np.mean(sqrt_lasso_mse_list)
+
+avg_scad_vars = np.mean(scad_selected_vars)
+avg_elasticnet_vars = np.mean(elasticnet_selected_vars)
+avg_sqrt_lasso_vars = np.mean(sqrt_lasso_selected_vars)
+
+print(f"SCAD - Cross-validated MSE: {avg_scad_mse}, Average model size: {avg_scad_vars}")
+print(f"ElasticNet - Cross-validated MSE: {avg_elasticnet_mse}, Average model size: {avg_elasticnet_vars}")
+print(f"SqrtLasso - Cross-validated MSE: {avg_sqrt_lasso_mse}, Average model size: {avg_sqrt_lasso_vars}")
+
+min_mse = min(avg_scad_mse, avg_elasticnet_mse, avg_sqrt_lasso_mse)
+if min_mse == avg_scad_mse:
+    print("SCAD model performs best.")
+elif min_mse == avg_elasticnet_mse:
+    print("ElasticNet model performs best.")
+else:
+    print("Square Root Lasso model performs best.")
+```
+
+### Output:
+SCAD - Cross-validated MSE: 793.7256916953619, Average model size: 44.0 <br>
+ElasticNet - Cross-validated MSE: 1420.2618110903682, Average model size: 44.0 <br>
+SqrtLasso - Cross-validated MSE: 1561.4066953475517, Average model size: 43.8 <br>
+SCAD model performs best.
